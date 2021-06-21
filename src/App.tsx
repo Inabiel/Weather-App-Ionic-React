@@ -33,6 +33,7 @@ import '@ionic/react/css/display.css';
 
 /* Theme variables */
 import './theme/variables.css';
+import Detail from './pages/Detail';
 
 const App: React.FC = () => (
   <IonApp>
@@ -51,6 +52,7 @@ const App: React.FC = () => (
           <Route exact path="/">
             <Redirect to="/tab1" />
           </Route>
+          <Route path="/detail" component={Detail} />
         </IonRouterOutlet>
         <IonTabBar slot="bottom" color="dark">
           <IonTabButton tab="tab1" href="/tab1">

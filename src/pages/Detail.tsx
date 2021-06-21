@@ -1,23 +1,14 @@
-import {
-  IonContent,
-  IonHeader,
-  IonPage,
-  IonTitle,
-  IonToolbar,
-  IonSearchbar,
-  IonGrid,
-  IonRow,
-  IonCol,
-  IonButton,
-  IonIcon,
-  IonItem,
-} from '@ionic/react';
+import { IonPage } from '@ionic/react';
 import { useEffect, useState } from 'react';
 import { sunnyOutline } from 'ionicons/icons';
 import './Tab1.css';
-import Axios from 'axios';
 
+import Header from '../components/Header';
 const Detail: React.FC = () => {
-  const [state, setState] = useState('');
+  return (
+    <IonPage>
+      <Header />
+    </IonPage>
+  );
 };
 export default Detail;

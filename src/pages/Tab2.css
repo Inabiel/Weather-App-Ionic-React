@@ -3,3 +3,6 @@
   padding: 15px;
   border-bottom: 0.5px solid white;
 }
+.for-hovering:hover {
+  cursor: pointer;
+}

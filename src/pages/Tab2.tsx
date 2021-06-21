@@ -21,11 +21,19 @@ import './Tab1.css';
 import './Tab2.css';
 import Axios from 'axios';
 import moment from 'moment';
+import Header from '../components/Header';
 
 const Tab1: React.FC = () => {
   const [searchText, setSearchText] = useState('');
   const [weather, setWeatherData] = useState<any>({});
   const [isDataExist, setIsDataExists] = useState(false);
+
+  const setIntoFavouritePage = (props: string) => {
+    let a: any = [];
+    a = JSON.parse(localStorage.getItem('favourite')!) || [];
+    a.push(props);
+    localStorage.setItem('favourite', JSON.stringify(a));
+  };
 
   const getWeatherData = async () => {
     try {
@@ -35,6 +43,7 @@ const Tab1: React.FC = () => {
       const dataResponse = data.data;
       setWeatherData(dataResponse);
       setIsDataExists(true);
+      localStorage.setItem('weatherList', JSON.stringify(dataResponse));
     } catch (e) {
       setWeatherData(e.message);
       setIsDataExists(true);
@@ -43,7 +52,6 @@ const Tab1: React.FC = () => {
 
   useEffect(() => {
     let locationName = JSON.parse(localStorage.getItem('current') || '{}').name;
-
     const axiosData = async () => {
       let weatherData = await Axios.get(
         `https://api.openweathermap.org/data/2.5/forecast?q=${locationName}&appid=${process.env.REACT_APP_SECRET_KEY}`
@@ -56,19 +64,7 @@ const Tab1: React.FC = () => {
   }, []);
   return (
     <IonPage>
-      <IonHeader>
-        <IonToolbar color="dark">
-          <IonItem color="dark" className="ion-text-center">
-            <IonIcon
-              slot="start"
-              icon={sunnyOutline}
-              className="tab-icon-size ion-text-center"
-            ></IonIcon>
-            Weather Application
-          </IonItem>
-          <IonTitle color="light"></IonTitle>
-        </IonToolbar>
-      </IonHeader>
+      <Header />
 
       <IonContent fullscreen color="dark">
         <h2 className="ion-text-center ion-padding-vertical nabil-margin-top">
@@ -109,9 +105,13 @@ const Tab1: React.FC = () => {
                 Forecast Around {weather.city.name} in the upcoming hour is
               </h2>
               {weather.list.map((weather) => (
-                <div>
+                <div className="for-hovering">
                   {weather.weather.map((descWeather) => (
-                    <IonList className="list-dark" lines="full">
+                    <IonList
+                      key={weather.dt_txt}
+                      className="list-dark"
+                      lines="full"
+                    >
                       <IonItem color="dark">
                         <IonAvatar slot="start">
                           <img
@@ -131,26 +131,36 @@ const Tab1: React.FC = () => {
                           </h2>
                         </IonLabel>
                         <IonLabel slot="end">
-                          <h2
-                            style={{
-                              fontSize: '1.4em',
-                              color:
-                                weather.main.temp > 290 ? '#9c312c' : 'green',
-                            }}
-                          >
-                            {(weather.main.temp - 273.15).toFixed(2)}°C
-                          </h2>
-                          <span
-                            style={{
-                              color: 'green',
-                              fontSize: '1em',
-                              paddingTop: '7px',
-                            }}
-                          >
-                            {(weather.main.temp_min - 273.15).toFixed(2)}-
-                            {(weather.main.temp_max - 273.15).toFixed(2)}°C
-                          </span>
+                          <div>
+                            <h2
+                              style={{
+                                fontSize: '1.4em',
+                                color:
+                                  weather.main.temp > 290 ? '#9c312c' : 'green',
+                              }}
+                            >
+                              {(weather.main.temp - 273.15).toFixed(2)}°C
+                            </h2>
+                            <span
+                              style={{
+                                color: 'green',
+                                fontSize: '1em',
+                                paddingTop: '7px',
+                              }}
+                            >
+                              {(weather.main.temp_min - 273.15).toFixed(2)}-
+                              {(weather.main.temp_max - 273.15).toFixed(2)}°C
+                              {weather.key}
+                            </span>
+                          </div>
                         </IonLabel>
+                        <IonButton
+                          slot="end"
+                          onClick={() => setIntoFavouritePage(weather)}
+                          style={{ minHeight: '35px' }}
+                        >
+                          Favourite
+                        </IonButton>
                       </IonItem>
                     </IonList>
                   ))}

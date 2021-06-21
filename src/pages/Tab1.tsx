@@ -16,6 +16,7 @@ import { useEffect, useState } from 'react';
 import { sunnyOutline } from 'ionicons/icons';
 import './Tab1.css';
 import Axios from 'axios';
+import Header from '../components/Header';
 
 const Tab1: React.FC = () => {
   const [searchText, setSearchText] = useState('');
@@ -41,25 +42,12 @@ const Tab1: React.FC = () => {
     if (localStorage.getItem('current')) {
       setWeatherData(JSON.parse(localStorage.getItem('current') || '{}'));
       setIsDataExists(true);
-      console.log(weather);
     }
   }, []);
 
   return (
     <IonPage>
-      <IonHeader>
-        <IonToolbar color="dark">
-          <IonItem color="dark" className="ion-text-center">
-            <IonIcon
-              slot="start"
-              icon={sunnyOutline}
-              className="tab-icon-size ion-text-center"
-            ></IonIcon>
-            Weather Application
-          </IonItem>
-          <IonTitle color="light"></IonTitle>
-        </IonToolbar>
-      </IonHeader>
+      <Header />
 
       <IonContent fullscreen color="dark">
         <h2 className="ion-text-center ion-padding-vertical nabil-margin-top">
