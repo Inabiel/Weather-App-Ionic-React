@@ -9,15 +9,13 @@ import {
   IonRow,
   IonCol,
   IonButton,
-  useIonViewWillEnter,
   IonIcon,
   IonItem,
   IonList,
   IonAvatar,
   IonLabel,
 } from '@ionic/react';
-import React, { useState } from 'react';
-import Moment from 'moment';
+import React, { useState, useEffect } from 'react';
 import { sunnyOutline } from 'ionicons/icons';
 import './Tab1.css';
 import './Tab2.css';
@@ -43,10 +41,19 @@ const Tab1: React.FC = () => {
     }
   };
 
-  useIonViewWillEnter(() => {
-    console.log('ionViewDidEnter event fired');
-  });
+  useEffect(() => {
+    let locationName = JSON.parse(localStorage.getItem('current') || '{}').name;
 
+    const axiosData = async () => {
+      let weatherData = await Axios.get(
+        `https://api.openweathermap.org/data/2.5/forecast?q=${locationName}&appid=${process.env.REACT_APP_SECRET_KEY}`
+      );
+      setWeatherData(weatherData.data);
+      setIsDataExists(true);
+    };
+
+    axiosData();
+  }, []);
   return (
     <IonPage>
       <IonHeader>
@@ -99,7 +106,7 @@ const Tab1: React.FC = () => {
                   padding: '10px 0px',
                 }}
               >
-                Forecast Around {searchText} in the upcoming hour is
+                Forecast Around {weather.city.name} in the upcoming hour is
               </h2>
               {weather.list.map((weather) => (
                 <div>
@@ -126,22 +133,23 @@ const Tab1: React.FC = () => {
                         <IonLabel slot="end">
                           <h2
                             style={{
-                              color: 'green',
                               fontSize: '1.4em',
+                              color:
+                                weather.main.temp > 290 ? '#9c312c' : 'green',
                             }}
                           >
                             {(weather.main.temp - 273.15).toFixed(2)}°C
                           </h2>
-                          <h2
+                          <span
                             style={{
                               color: 'green',
-                              fontSize: '1.25em',
+                              fontSize: '1em',
                               paddingTop: '7px',
                             }}
                           >
-                            {(weather.main.temp_min - 273.15).toFixed(2)} -
+                            {(weather.main.temp_min - 273.15).toFixed(2)}-
                             {(weather.main.temp_max - 273.15).toFixed(2)}°C
-                          </h2>
+                          </span>
                         </IonLabel>
                       </IonItem>
                     </IonList>

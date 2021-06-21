@@ -61,6 +61,10 @@ const App: React.FC = () => (
             <IonIcon icon={cloudCircle} class="tab-icon-size" />
             <IonLabel class="fira-code">Cuaca 5 Jam Kedepan</IonLabel>
           </IonTabButton>
+          <IonTabButton tab="tab3" href="/tab3">
+            <IonIcon icon={cloudCircle} class="tab-icon-size" />
+            <IonLabel class="fira-code">Favourite</IonLabel>
+          </IonTabButton>
         </IonTabBar>
       </IonTabs>
     </IonReactRouter>

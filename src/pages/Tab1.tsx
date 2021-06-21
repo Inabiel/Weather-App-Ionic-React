@@ -9,11 +9,10 @@ import {
   IonRow,
   IonCol,
   IonButton,
-  useIonViewWillEnter,
   IonIcon,
   IonItem,
 } from '@ionic/react';
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { sunnyOutline } from 'ionicons/icons';
 import './Tab1.css';
 import Axios from 'axios';
@@ -31,15 +30,20 @@ const Tab1: React.FC = () => {
       const dataResponse = data.data;
       setWeatherData(dataResponse);
       setIsDataExists(true);
+      localStorage.setItem('current', JSON.stringify(dataResponse));
     } catch (e) {
       setWeatherData(e.message);
       setIsDataExists(true);
     }
   };
 
-  useIonViewWillEnter(() => {
-    console.log('ionViewDidEnter event fired');
-  });
+  useEffect(() => {
+    if (localStorage.getItem('current')) {
+      setWeatherData(JSON.parse(localStorage.getItem('current') || '{}'));
+      setIsDataExists(true);
+      console.log(weather);
+    }
+  }, []);
 
   return (
     <IonPage>
@@ -85,7 +89,7 @@ const Tab1: React.FC = () => {
               Search Now
             </IonButton>
           </IonRow>
-          {isDataExist === true && (
+          {isDataExist === true && Object.keys(weather).length > 7 && (
             <div>
               <IonRow>
                 <IonCol>
@@ -122,7 +126,10 @@ const Tab1: React.FC = () => {
                 <IonCol>
                   <h1
                     className="ion-text-center"
-                    style={{ fontSize: '1.75em' }}
+                    style={{
+                      fontSize: '1.75em',
+                      color: weather.main.temp > 290 ? '#9c312c' : 'green',
+                    }}
                   >
                     {(weather.main.temp - 273.15).toFixed(2)}°C
                   </h1>
